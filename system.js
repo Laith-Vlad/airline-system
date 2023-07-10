@@ -1,26 +1,21 @@
-'use strict';
-const faker = require('faker');
-const eventsPool = require('./events');
-require('./pilot');
-require('./manager');
+const eventsPool = require('./eventsPool')
 
-eventsPool.on('controls', () => {
-  setInterval(() => {
-    const flight = {
-      event: 'new-flight',
-      time: new Date(),
-      Details: {
-        airLine: 'Royal Jordanian Airlines',
-        flightID: faker.datatype.uuid(),
-        pilot: faker.name.firstName(),
-        destination: faker.address.city(),
-      },
-    };
+require('./manager')
+require('./pilot')
 
-    eventsPool.emit('new-flight', flight);
-    eventsPool.emit('pilot', flight);
-  }, 10000);
-});
+eventsPool.on('new-flight', newFlight)
+eventsPool.on('took-off', takenOffFlight)
+eventsPool.on('Arrived', arrived)
 
-eventsPool.emit('controls');
+function arrived(payload){
+    console.log("Flight:", payload)
 
+}
+function takenOffFlight(payload){
+    console.log("Flight:", payload)
+
+}
+
+function newFlight(payload){
+    console.log("Flight:", payload) 
+}

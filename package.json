@@ -1,15 +1,10 @@
 {
-  "name": "airline-system",
-  "version": "1.0.0",
-  "description": "",
-  "main": "system.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "install": "^0.13.0",
+    "npm": "^9.8.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "faker": "^6.6.6"
+    "uuid": "^9.0.0"
   }
 }
