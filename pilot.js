@@ -1,26 +1,26 @@
-'use strict';
-const eventsPool = require('./events');
-eventsPool.on("pilot" ,(payload) =>{
-     setTimeout(() =>{
-          console.log(`Pilot: flight with ID ${payload.Details.flightID} took-off`);
-          eventsPool.emit('took-off' , payload)
-     } , 4000)
-     setTimeout(() =>{
-          console.log(`The Pilot: flight with ID ${payload.Details.flightID} Arrived`);
-          eventsPool.emit('Arrived' , payload)
-          console.log(`The Manager: we’re greatly thankful for the amazing flight, ${payload.Details.pilot}`);
-     },7000)
-})
-eventsPool.on("took-off" ,(payload) =>{
-     payload.event = 'taken_off'
-     payload.time = new Date(),
+'use strict'
 
-     console.log('Flight : ' , payload);
-})
-eventsPool.on('Arrived' , (payload) =>{
-     payload.event = 'Arrived'
-     payload.time = new Date(),
 
-     console.log('Flight : ' , payload);
+const eventsPool = require('./eventsPool')
+require('./manager')
 
-})
+eventsPool.on('new-flight', flightHandler)
+
+function flightHandler(payload){
+  
+    setTimeout(()=>{
+    console.log(`Pilot: flight with ID: ${payload.details.flightID} taken-off`)
+     payload.event= 'took-off',
+      payload.time=new Date();        
+      eventsPool.emit('took-off', payload)
+}, 4000);
+
+
+setTimeout(()=>{
+    console.log(`Pilot: flight with ID: ${payload.details.flightID}  Arrived to destination: `)
+         payload.event='Arrived',
+          payload.time= new Date(), 
+        eventsPool.emit('Arrived', payload)
+    }, 7000);
+
+}
