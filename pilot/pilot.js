@@ -16,7 +16,7 @@ socket.on('connect', () => {
 });
 
 // Handle 'new-flight' event from the 'airline' namespace
-socket.on('airline:new-flight', (newFlight) => {
+socket.on('new-flight', (newFlight) => {
   console.log('Pilot: New flight scheduled - Flight ID:', newFlight.details.flightID);
   flightHandler(newFlight);
 });
@@ -31,22 +31,22 @@ socket.on('Arrived', (newFlight) => {
 function flightHandler(newFlight) {
   setTimeout(() => {
     console.log(`Pilot: Flight with ID ${newFlight.details.flightID} has taken off.`);
-    flight.event = 'took-off';
-    flight.time = new Date();
-    socket.emit('took-off', flight);
+    newFlight.event = 'took-off';
+    newFlight.time = new Date();
+    socket.emit('took-off', newFlight);
   }, 4000);
 
   setTimeout(() => {
     console.log(`Pilot: Flight with ID ${newFlight.details.flightID} has arrived at the destination.`);
-    flight.event = 'Arrived';
-    flight.time = new Date();
+    newFlight.event = 'Arrived';
+    newFlight.time = new Date();
     socket.emit('Arrived', newFlight);
   }, 7000);
 }
 
 // Function to notify the manager about the arrived flight
 function notifyManager(paylnewFlightoad) {
-  console.log(`Notifying manager about the arrived flight - Pilot: ${newFlight.details.pilot}`);
+  console.log(`Notifying manager about the arrived flight - Pilot: ${paylnewFlightoad.details.pilot}`);
   // Implement your code here to notify the manager (e.g., send a notification, call an API, etc.)
 }
 
