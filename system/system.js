@@ -4,6 +4,10 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 
 const io = require('socket.io')(port);
+const { v4: uuid } = require('uuid');
+
+// Queue object to store flights
+const queue = {};
 
 // Handle socket connections
 io.on('connection', socket => {
@@ -12,7 +16,14 @@ io.on('connection', socket => {
   // Handle 'new-flight' event
   socket.on('new-flight', payload => {
     console.log('New Flight:', payload);
+    const flightId = generateFlightId();
+    const id = uuid();
+    queue[id] = payload;
     io.emit('new-flight', payload);
+    io.emit('flight', {
+      id,
+      payload: queue[id]
+    });
   });
 
   // Handle 'took-off' event
@@ -31,7 +42,28 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log('A client disconnected');
   });
+
+  // Handle 'get-all' event
+  socket.on('get-all', () => {
+    Object.keys(queue).forEach(id => {
+      socket.emit('flight', {
+        id,
+        payload: queue[id]
+      });
+    });
+  });
+
+  // Handle 'delete' event
+  socket.on('delete', payload => {
+    delete queue[payload.id];
+    console.log(queue);
+  });
 });
+
+// Utility function to generate a flight ID
+function generateFlightId() {
+  return Math.random().toString(36).substr(2, 9);
+}
 
 // Start the server and listen on the specified port
 console.log(`Socket.io server is running on port ${port}`);

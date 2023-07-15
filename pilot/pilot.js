@@ -27,6 +27,14 @@ socket.on('Arrived', (newFlight) => {
   notifyManager(newFlight);
 });
 
+// Handle 'flight' event
+socket.on('flight', () => {
+  console.log("Pilot: Sorry, I didn't catch this flight ID 332u443673r32yuf463");
+});
+
+// Trigger 'get-all' event to retrieve all messages from the message queue
+socket.emit('get-all');
+
 // Function to handle flight events
 function flightHandler(newFlight) {
   setTimeout(() => {
@@ -41,12 +49,14 @@ function flightHandler(newFlight) {
     newFlight.event = 'Arrived';
     newFlight.time = new Date();
     socket.emit('Arrived', newFlight);
+    // Delete the flight from the message queue (stretch goal)
+    socket.emit('delete', newFlight.details.flightID);
   }, 7000);
 }
 
 // Function to notify the manager about the arrived flight
-function notifyManager(paylnewFlightoad) {
-  console.log(`Notifying manager about the arrived flight - Pilot: ${paylnewFlightoad.details.pilot}`);
+function notifyManager(payload) {
+  console.log(`Notifying manager about the arrived flight - Pilot: ${payload.details.pilot}`);
   // Implement your code here to notify the manager (e.g., send a notification, call an API, etc.)
 }
 
